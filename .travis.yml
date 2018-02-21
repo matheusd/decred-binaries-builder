@@ -4,7 +4,7 @@ language: python
 python: 3.6
 
 install:
-  - pip install github3
+  - pip install --pre github3.py
 
 script:
   - python builder.py
