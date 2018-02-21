@@ -1,0 +1,10 @@
+os: linux
+
+language: python
+python: 3.6
+
+install:
+  - pip install github3
+
+script:
+  - python builder.py
