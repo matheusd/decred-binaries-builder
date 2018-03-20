@@ -17,7 +17,7 @@ README_TEMPLATE = """
 These are binaries for the decred project built from unstable, under development
 code. Do not use in production. You will not receive support for them.
 
-[Latest Release](https://github.com/{DECRED_REPO_OWNER}/{BUILD_REPO_REPO}/releases/latest)
+[Latest Release](https://github.com/{BUILD_REPO_OWNER}/{BUILD_REPO_REPO}/releases/latest)
 
 ## Version Information
 
