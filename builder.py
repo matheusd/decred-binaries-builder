@@ -23,16 +23,31 @@ code. Do not use in production. You will not receive support for them.
 
 <pre>
 version id = <a href="https://github.com/{BUILD_REPO_OWNER}/{BUILD_REPO_REPO}/releases/tag/{tagName}">{version}</a>
-      dcrd = <a href="https://github.com/{DECRED_REPO_OWNER}/dcrd/commits/{shaDcrd}">{shaDcrd}</a>
- dcrwallet = <a href="https://github.com/{DECRED_REPO_OWNER}/dcrwallet/commits/{shaDcrwallet}">{shaDcrwallet}</a>
-decrediton = <a href="https://github.com/{DECRED_REPO_OWNER}/decrediton/commits/{shaDecrediton}">{shaDecrediton}</a>
+      dcrd = <a href="https://github.com/{dcrdRepoOwner}/dcrd/commits/{shaDcrd}">{shaDcrd}</a>
+ dcrwallet = <a href="https://github.com/{dcrwRepoOwner}/dcrwallet/commits/{shaDcrwallet}">{shaDcrwallet}</a>
+decrediton = <a href="https://github.com/{decreditonRepoOwner}/decrediton/commits/{shaDecrediton}">{shaDecrediton}</a>
 </pre>
+
+## Repository Information
+
+- **dcrd** = [{dcrdRepoOwner}/{dcrdBranch}](https://github.com/{dcrdRepoOwner}/dcrd)
+- **dcrwallet** = [{dcrwRepoOwner}/{dcrwBranch}](https://github.com/{dcrwRepoOwner}/dcrwallet)
+- **decrediton** = [{decreditonRepoOwner}/{decreditonBranch}](https://github.com/{decreditonRepoOwner}/decrediton)
+
 
 """
 
-def getRepoMasterCommit(g, repoName):
-    repo = g.repository(DECRED_REPO_OWNER, repoName)
-    master = repo.branch(repo.default_branch)
+def envVarOrDef(varName, default):
+    if varName in os.environ:
+        return os.environ[varName]
+    return default
+
+def getRepoMasterCommit(g, repoOwner, repoName, repoBranch):
+    repo = g.repository(repoOwner, repoName)
+    branchName = repoBranch if repoBranch != None else repo.default_branch
+    master = repo.branch(branchName)
+    if not master:
+        raise "Branch %s not found in repo %s/%s" % (repoBranch, repoOwner, repoName)
     return master.commit.sha
 
 def main():
@@ -40,15 +55,29 @@ def main():
         print("Please define the env variable GITHUB_OATH_TOKEN with the github token")
         sys.exit(1)
 
+    # You may override this by using an appropriate environment variable
+    dcrdRepoOwner = envVarOrDef("DCRD_REPO_OWNER", DECRED_REPO_OWNER)
+    dcrwRepoOwner = envVarOrDef("DCRW_REPO_OWNER", DECRED_REPO_OWNER)
+    decreditonRepoOwner = envVarOrDef("DECREDITON_REPO_OWNER", DECRED_REPO_OWNER)
+    dcrdBranch = envVarOrDef("DCRD_BRANCH", None)
+    dcrwBranch = envVarOrDef("DCRW_BRANCH", None)
+    decreditonBranch = envVarOrDef("DECREDITON_BRANCH", None)
+
     g = login(token=os.environ["GITHUB_OATH_TOKEN"])
     versionInfo = {
-        "shaDcrd": getRepoMasterCommit(g, "dcrd"),
-        "shaDcrwallet": getRepoMasterCommit(g, "dcrwallet"),
-        "shaDecrediton": getRepoMasterCommit(g, "decrediton"),
+        "shaDcrd": getRepoMasterCommit(g, dcrdRepoOwner, "dcrd", dcrdBranch),
+        "shaDcrwallet": getRepoMasterCommit(g, dcrwRepoOwner, "dcrwallet", dcrwBranch),
+        "shaDecrediton": getRepoMasterCommit(g, decreditonRepoOwner, "decrediton", decreditonBranch),
         "version": time.strftime("%Y%m%d%H%M%S", time.gmtime()),
         "DECRED_REPO_OWNER": DECRED_REPO_OWNER,
         "BUILD_REPO_OWNER": BUILD_REPO_OWNER,
-        "BUILD_REPO_REPO": BUILD_REPO_REPO
+        "BUILD_REPO_REPO": BUILD_REPO_REPO,
+        "dcrdRepoOwner": dcrdRepoOwner,
+        "dcrwRepoOwner": dcrwRepoOwner,
+        "decreditonRepoOwner": decreditonRepoOwner,
+        "dcrdBranch": dcrdBranch,
+        "dcrwBranch": dcrwBranch,
+        "decreditonBranch": decreditonBranch,
     }
 
     print("Using dcrd version %s" % versionInfo["shaDcrd"])
@@ -90,7 +119,7 @@ def main():
     ref.update(commit.sha)
     print("Updated master branch to new commit")
 
-    release = destRepo.create_release(tagName)
+    release = destRepo.create_release(tagName, body=readme)
     print("Created Release %s" % tagName)
 
 
