@@ -12,7 +12,7 @@ BUILD_REPO_REPO = "decred-weekly-builds"
 README_TEMPLATE = """
 # Decred Development Binaries
 
-[![Build Status](https://travis-ci.org/matheusd/decred-weekly-builds.svg?branch={tagName})](https://travis-ci.org/matheusd/decred-weekly-builds) [![Build status](https://ci.appveyor.com/api/projects/status/hncgrnv0xuqb6s3c/branch/{tagName}?svg=true)](https://ci.appveyor.com/project/matheusd/decred-weekly-builds/branch/{tagName})
+[![Build Status](https://travis-ci.org/matheusd/decred-weekly-builds.svg?branch={tagName})](https://travis-ci.org/matheusd/decred-weekly-builds) [![Build status](https://ci.appveyor.com/api/projects/status/hncgrnv0xuqb6s3c/branch/master?svg=true)](https://ci.appveyor.com/project/matheusd/decred-weekly-builds/branch/master)
 
 
 **DO NOT USE IN PRODUCTION**
