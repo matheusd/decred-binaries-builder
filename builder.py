@@ -12,7 +12,7 @@ BUILD_REPO_REPO = "decred-weekly-builds"
 README_TEMPLATE = """
 # Decred Development Binaries
 
-[![Build Status](https://travis-ci.org/matheusd/decred-weekly-builds.svg?branch={tagName})](https://travis-ci.org/matheusd/decred-weekly-builds) [![Build status](https://ci.appveyor.com/api/projects/status/hncgrnv0xuqb6s3c/branch/master?svg=true)](https://ci.appveyor.com/project/matheusd/decred-weekly-builds/branch/master)
+![build status](https://github.com/matheusd/decred-weekly-builds/actions/workflows/decrediton.yml/badge.svg)
 
 
 **DO NOT USE IN PRODUCTION**
@@ -38,14 +38,18 @@ files.
 <pre>
 version id = <a href="https://github.com/{BUILD_REPO_OWNER}/{BUILD_REPO_REPO}/releases/tag/{tagName}">{version}</a>
       dcrd = <a href="https://github.com/{dcrdRepoOwner}/dcrd/commits/{shaDcrd}">{shaDcrd}</a>
+    dcrctl = <a href="https://github.com/{dcrctlRepoOwner}/dcrctl/commits/{shaDcrctl}">{shaDcrctl}</a>
  dcrwallet = <a href="https://github.com/{dcrwRepoOwner}/dcrwallet/commits/{shaDcrwallet}">{shaDcrwallet}</a>
+    dcrlnd = <a href="https://github.com/{dcrlndRepoOwner}/dcrlnd/commits/{shaDcrlnd}">{shaDcrlnd}</a>
 decrediton = <a href="https://github.com/{decreditonRepoOwner}/decrediton/commits/{shaDecrediton}">{shaDecrediton}</a>
 </pre>
 
 ## Repository Information
 
 - **dcrd** = [{dcrdRepoOwner}/{dcrdBranch}](https://github.com/{dcrdRepoOwner}/dcrd)
+- **dcrctl** = [{dcrctlRepoOwner}/{dcrctlBranch}](https://github.com/{dcrctlRepoOwner}/dcrctl)
 - **dcrwallet** = [{dcrwRepoOwner}/{dcrwBranch}](https://github.com/{dcrwRepoOwner}/dcrwallet)
+- **dcrlnd** = [{dcrlndRepoOwner}/{dcrlndBranch}](https://github.com/{dcrlndRepoOwner}/dcrlnd)
 - **decrediton** = [{decreditonRepoOwner}/{decreditonBranch}](https://github.com/{decreditonRepoOwner}/decrediton)
 
 
@@ -72,30 +76,42 @@ def main():
     # You may override this by using an appropriate environment variable
     dcrdRepoOwner = envVarOrDef("DCRD_REPO_OWNER", DECRED_REPO_OWNER)
     dcrwRepoOwner = envVarOrDef("DCRW_REPO_OWNER", DECRED_REPO_OWNER)
+    dcrctlRepoOwner = envVarOrDef("DCRCTL_REPO_OWNER", DECRED_REPO_OWNER)
+    dcrlndRepoOwner = envVarOrDef("DCRLND_REPO_OWNER", DECRED_REPO_OWNER)
     decreditonRepoOwner = envVarOrDef("DECREDITON_REPO_OWNER", DECRED_REPO_OWNER)
     dcrdBranch = envVarOrDef("DCRD_BRANCH", None)
+    dcrctlBranch = envVarOrDef("DCRCTL_BRANCH", None)
     dcrwBranch = envVarOrDef("DCRW_BRANCH", None)
+    dcrlndBranch = envVarOrDef("DCRLND_BRANCH", None)
     decreditonBranch = envVarOrDef("DECREDITON_BRANCH", None)
 
     g = login(token=os.environ["GITHUB_OATH_TOKEN"])
     versionInfo = {
         "shaDcrd": getRepoMasterCommit(g, dcrdRepoOwner, "dcrd", dcrdBranch),
+        "shaDcrctl": getRepoMasterCommit(g, dcrctlRepoOwner, "dcrctl", dcrctlBranch),
         "shaDcrwallet": getRepoMasterCommit(g, dcrwRepoOwner, "dcrwallet", dcrwBranch),
+        "shaDcrlnd": getRepoMasterCommit(g, dcrlndRepoOwner, "dcrlnd", dcrlndBranch),
         "shaDecrediton": getRepoMasterCommit(g, decreditonRepoOwner, "decrediton", decreditonBranch),
         "version": time.strftime("%Y%m%d%H%M%S", time.gmtime()),
         "DECRED_REPO_OWNER": DECRED_REPO_OWNER,
         "BUILD_REPO_OWNER": BUILD_REPO_OWNER,
         "BUILD_REPO_REPO": BUILD_REPO_REPO,
         "dcrdRepoOwner": dcrdRepoOwner,
+        "dcrctlRepoOwner": dcrctlRepoOwner,
         "dcrwRepoOwner": dcrwRepoOwner,
+        "dcrlndRepoOwner": dcrlndRepoOwner,
         "decreditonRepoOwner": decreditonRepoOwner,
         "dcrdBranch": dcrdBranch,
+        "dcrctlBranch": dcrctlBranch,
         "dcrwBranch": dcrwBranch,
+        "dcrlndBranch": dcrlndBranch,
         "decreditonBranch": decreditonBranch,
     }
 
     print("Using dcrd version %s" % versionInfo["shaDcrd"])
+    print("Using dcrctl version %s" % versionInfo["shaDcrctl"])
     print("Using dcrwallet version %s" % versionInfo["shaDcrwallet"])
+    print("Using dcrlnd version %s" % versionInfo["shaDcrlnd"])
     print("Using decrediton version %s" % versionInfo["shaDecrediton"])
     print("Generating as version %s" % versionInfo["version"])
 
@@ -133,7 +149,7 @@ def main():
     ref.update(commit.sha)
     print("Updated master branch to new commit")
 
-    release = destRepo.create_release(tagName, body=readme)
+    destRepo.create_release(tagName, body=readme)
     print("Created Release %s" % tagName)
 
 
