@@ -70,7 +70,7 @@ def getRepoMasterCommit(g, repoOwner, repoName, repoBranch):
 
 def main():
     if (not ("GH_OATH_TOKEN" in os.environ)):
-        print("Please define the env variable GITHUB_OATH_TOKEN with the github token")
+        print("Please define the env variable GH_OATH_TOKEN with the github token")
         sys.exit(1)
 
     # You may override this by using an appropriate environment variable
