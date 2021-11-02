@@ -7,7 +7,7 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: buildenv
+    environment: builderenv
 
     steps:
       - uses: actions/checkout@v2
