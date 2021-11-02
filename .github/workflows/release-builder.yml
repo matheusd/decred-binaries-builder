@@ -1,5 +1,5 @@
 name: Trigger new release
-on: create
+on: [push]
 
 #  schedule:
 #    - cron: '26 15 * * 0'
