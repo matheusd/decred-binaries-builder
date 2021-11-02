@@ -69,7 +69,7 @@ def getRepoMasterCommit(g, repoOwner, repoName, repoBranch):
     return master.commit.sha
 
 def main():
-    if (not ("GITHUB_OATH_TOKEN" in os.environ)):
+    if (not ("GH_OATH_TOKEN" in os.environ)):
         print("Please define the env variable GITHUB_OATH_TOKEN with the github token")
         sys.exit(1)
 
@@ -85,7 +85,7 @@ def main():
     dcrlndBranch = envVarOrDef("DCRLND_BRANCH", None)
     decreditonBranch = envVarOrDef("DECREDITON_BRANCH", None)
 
-    g = login(token=os.environ["GITHUB_OATH_TOKEN"])
+    g = login(token=os.environ["GH_OATH_TOKEN"])
     versionInfo = {
         "shaDcrd": getRepoMasterCommit(g, dcrdRepoOwner, "dcrd", dcrdBranch),
         "shaDcrctl": getRepoMasterCommit(g, dcrctlRepoOwner, "dcrctl", dcrctlBranch),
