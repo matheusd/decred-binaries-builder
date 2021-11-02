@@ -23,3 +23,5 @@ jobs:
 
       - name: Run release script
         run: python builder.py
+        env:
+          GH_OATH_TOKEN: ${{ secrets.GH_OATH_TOKEN }}
