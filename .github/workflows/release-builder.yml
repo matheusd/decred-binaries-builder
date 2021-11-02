@@ -1,7 +1,8 @@
 name: Trigger new release
-on:
-  schedule:
-    - cron: '26 15 * * 0'
+on: create
+
+#  schedule:
+#    - cron: '26 15 * * 0'
 
 jobs:
   build:
